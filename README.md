@@ -22,6 +22,7 @@
 		```
 		We won't use the linker built-in with MSYS2.
 
+> Sources in this repo are already patched. In another word, if you grab the sources from elsewhere you need to redo the patches.
 
 # Dependencies
 
