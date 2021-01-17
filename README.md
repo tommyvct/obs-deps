@@ -30,24 +30,18 @@
 https://download.qt.io/archive/qt/
 Download Qt here
 
+> Only the following folders is needed in the source folder: `gnuwin32`, `qtbase`, `qtsvg` and `qtwinextras`.
+> Use `jom` instead of `nmake`. `nmake` is single-threaded only, and it will take days to compile qt.
+
 ``` batch
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 cd qt\
 
-configure.bat -opensource -platform win32-msvc -xplatform win32-arm64-msvc2017 -nomake examples -nomake tests -release -prefix "C:\qt"
+configure.bat -opensource -platform win32-msvc -xplatform win32-arm64-msvc2017 -prefix "C:\qt"  -confirm-license  -schannel -nomake examples -nomake tests -no-compile-examples -no-dbus -no-freetype -no-harfbuzz -no-icu -no-feature-concurrent -no-feature-itemmodeltester -no-feature-printdialog -no-feature-printer -no-feature-printpreviewdialog -no-feature-printpreviewwidget -no-feature-sql -no-feature-sqlmodel -no-feature-testlib -no-sql-db2 -no-sql-ibase -no-sql-mysql -no-sql-oci -no-sql-odbc -no-sql-psql -no-sql-sqlite2 -no-sql-sqlite -no-sql-tds -DQT_NO_PDF -DQT_NO_PRINTER -mp
 
-REM just use jom, nmake is single-threaded and it will take days to compile qt
 jom -j12
 jom install -j12
-```
-
-```
-cd qt5
-git checkout v5.15.2
-perl init-repository --module-subset=qtbase,qtsvg,qtwinextras,qtnetwork
-git submodule foreach --recursive "git clean -dfx" && git clean -dfx
-configure -debug-and-release -opensource -confirm-license -schannel -nomake examples -nomake tests -no-compile-examples -no-dbus -no-freetype -no-harfbuzz -no-icu -no-feature-concurrent -no-feature-itemmodeltester -no-feature-printdialog -no-feature-printer -no-feature-printpreviewdialog -no-feature-printpreviewwidget -no-feature-sql -no-feature-sqlmodel -no-feature-testlib -no-sql-db2 -no-sql-ibase -no-sql-mysql -no-sql-oci -no-sql-odbc -no-sql-psql -no-sql-sqlite2 -no-sql-sqlite -no-sql-tds -DQT_NO_PDF -DQT_NO_PRINTER -mp -prefix "D:\code\Qt\5.15.2\msvc2019"
 ```
 
 ## Compile mbedTLS  
