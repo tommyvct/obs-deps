@@ -1,0 +1,2 @@
+﻿  test_opus_decode.c
+LINK : fatal error LNK1181: cannot open input file 'C:\Users\ws103\Desktop\opus-1.3.1\win32\VS2015\ARM64\ReleaseDLL\opus.lib'
