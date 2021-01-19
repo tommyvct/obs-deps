@@ -138,9 +138,9 @@ Use CMake.
 
 |Cache|Value|
 |---:|:---|
-|USE_ENCLIB|mbedtls|
-|USE_OPENSSL_PC|OFF|
-|ENABLE_STDCXX_SYNC|ON|
+|`USE_ENCLIB`|`mbedtls`|
+|`USE_OPENSSL_PC`|`OFF`|
+|`ENABLE_STDCXX_SYNC`|`ON`|
 
 Set mbedTLS library path accordingly.
 CMake may failed to find mbedTLS include path, add the include path in Visual Studio instead.
@@ -726,6 +726,13 @@ DepsARM64
 ```
 </details>
 
+## Prepare CEF
+
+Download CEF at https://cef-builds.spotifycdn.com/index.html#windowsarm64
+
+unzip, create a folder `build` inside.
+Run CMake and point the build directory to the `build` folder created last step, build the wrapper.
+
 
 # Compile OBS
 ## Generate `.sln`
@@ -733,8 +740,11 @@ Use CMake.
 
 |Cache|Value|
 |---:|:---|
-|BUILD_AMD_DECODER|OFF|
-|COMPILE_D3D12_HOOK|ON|
+|`BUILD_AMD_DECODER`|`OFF`|
+|`COMPILE_D3D12_HOOK`|`ON`|
+
+Also make sure `QTDIR`, `DepsPath` and `CEF_ROOT_DIR` are set.
+
 
 ## Prepare for compile  
 1. Unload following project:  
