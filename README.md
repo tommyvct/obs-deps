@@ -221,7 +221,12 @@ mv ./../../installed/lib/libx264.dll.lib ./../../installed/lib/libx264.lib
 ```
 
 ### Compile ffmpeg  
-Apply patch first.
+Apply patch first.  
+Add previously compiled `zlib.dll`, `zlib.lib` and `libpng16-16.dll` to `installed/bin/`.  
+Add previously compiled `zlib.dll` and `zlib.lib` to `installed/lib/`.  
+Add `png.h`, `pngconf.h` and `pnglibconf.h` to `installed/include/libpng16/`.  
+Add `zconf.h` and `zlib.h` to `installed/include/`.  
+
 ``` bash
 cd tmp/build
 mkdir ffmpeg
@@ -229,7 +234,7 @@ cd ffmpeg
 
 export CC=cl
 
-./../../sources/ffmpeg/configure --prefix=./../../installed --toolchain=msvc --arch=aarch64 --target-os=win32 --enable-asm --enable-shared --disable-postproc --disable-programs --enable-avresample --enable-libx264 --enable-gpl --extra-ldflags="-LIBPATH:./../../installed/lib/"   --extra-cflags="-I./../../installed/include/" --enable-cross-compile --enable-runtime-cpudetect --enable-d3d11va --disable-dxva2 --disable-doc --disable-debug
+./../../sources/ffmpeg/configure --prefix=./../../installed --toolchain=msvc --arch=aarch64 --target-os=win32 --enable-asm --enable-shared --disable-postproc --disable-programs --enable-avresample --enable-decoder=png --enable-zlib --enable-libx264 --enable-gpl --extra-ldflags="-LIBPATH:./../../installed/lib/"   --extra-cflags="-I./../../installed/include/" --enable-cross-compile --enable-runtime-cpudetect --enable-d3d11va --disable-dxva2 --disable-doc --disable-debug
 
 
 make V=1 -j
