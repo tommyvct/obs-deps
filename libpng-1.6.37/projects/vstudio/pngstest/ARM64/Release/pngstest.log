@@ -1,4 +1,0 @@
-﻿  pngstest.c
-C:\Users\ws103\Desktop\libpng-1.6.37\contrib\libtests\pngstest.c(34,12): error C2220: the following warning is treated as an error
-C:\Users\ws103\Desktop\libpng-1.6.37\contrib\libtests\pngstest.c(34,12): warning C4464: relative include path contains '..'
-C:\Users\ws103\Desktop\libpng-1.6.37\contrib\libtests\pngstest.c(47,10): warning C4464: relative include path contains '..'

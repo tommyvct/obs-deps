@@ -1,9 +1,0 @@
-﻿  decoder_example.c
-C:\Users\ws103\Desktop\vorbis-v1.3.7\examples\decoder_example.c(89,37): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ws103\Desktop\vorbis-v1.3.7\examples\decoder_example.c(176,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ws103\Desktop\vorbis-v1.3.7\examples\decoder_example.c(263,31): warning C4244: '=': conversion from 'int' to 'ogg_int16_t', possible loss of data
-C:\Users\ws103\Desktop\vorbis-v1.3.7\examples\decoder_example.c(285,43): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ws103\Desktop\vorbis-v1.3.7\examples\decoder_example.c(250,1): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Generating code
-  Finished generating code
-  vorbisdec_dynamic.vcxproj -> C:\Users\ws103\Desktop\vorbis-v1.3.7\win32\VS2010\ARM64\Release\vorbisdec.exe

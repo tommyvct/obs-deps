@@ -1,5 +1,0 @@
-﻿  pngtest.vcxproj -> C:\Users\ws103\Desktop\libpng-1.6.37\projects\vstudio\ARM64\Release\pngtest.exe
-  Executing PNG test program
-  This version of C:\Users\ws103\Desktop\libpng-1.6.37\projects\vstudio\ARM64\Release\pngtest.exe is not compatible with the version of Windows you're running. Check your computer's system information and then contact the software publisher.
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(283,5): error MSB3073: The command ""C:\Users\ws103\Desktop\libpng-1.6.37\projects\vstudio\ARM64\Release\pngtest.exe" ..\..\..\pngtest.png "ARM64\Release\pngout.png"
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(283,5): error MSB3073: :VCEnd" exited with code 216.

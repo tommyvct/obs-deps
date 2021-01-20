@@ -1,1 +1,0 @@
-C:\Users\ws103\Desktop\zlib-1.2.11\contrib\vstudio\vc14\ARM64\ReleaseWithoutAsm\zlibstat.lib
