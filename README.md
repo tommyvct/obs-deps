@@ -250,13 +250,35 @@ Switch to Release Static solution configuration
 Right click `freetype` **project**, then click properties
 Click Librarian on the left, change Target Machine to MachineARM64
 
+## Compile Detours
+https://github.com/Microsoft/Detours
+Use the built-in sln.
+
+## Prepare Python
+Grab the latest release from https://github.com/jay0lee/CPython-Windows-ARM64.
+Copy the `include` folder to `DepsARM64\include`, then rename it to `python`.
+Copy `python3.lib` and `python39.lib` to `DepsARM64\bin`.
+
+
+## Prepare swig
+From the Intel version of deps, copy the entire `swig` folder over.
+`swig` is a compile-time tool, and it's not linked or bundled to the artifact.
+
+## Prepare CEF
+
+Download CEF at https://cef-builds.spotifycdn.com/index.html#windowsarm64
+
+unzip, create a folder `build` inside.
+Run CMake and point the build directory to the `build` folder created last step, build the wrapper.
+
 ## Gather files  
 Gather the binaries in `bin` folder and headers in `include` folder.   
 
 <details> <summary>It should be look like this:</summary>
-
 ```
-DepsARM64 
+DepsARM64
+│   tree.txt
+│   
 ├───bin
 │       avcodec-58.dll
 │       avcodec.lib
@@ -272,6 +294,7 @@ DepsARM64
 │       avutil.lib
 │       cmocka.dll
 │       cmocka.lib
+│       detours.lib
 │       freetype.lib
 │       libcurl.dll
 │       libcurl.lib
@@ -288,6 +311,8 @@ DepsARM64
 │       mbedcrypto.lib
 │       mbedtls.lib
 │       mbedx509.lib
+│       python3.lib
+│       python39.lib
 │       swresample-3.dll
 │       swresample.lib
 │       swscale-5.dll
@@ -296,446 +321,610 @@ DepsARM64
 │       zlib.dll
 │       zlib.lib
 │       
-└───include
-    │   ft2build.h
-    │   x264.h
-    │   x264_config.h
-    │   zconf.h
-    │   zlib.h
-    │   
-    ├───cmocka
-    │       cmocka.h
-    │       cmocka_pbc.h
-    │       
-    ├───curl
-    │       curl.h
-    │       curlver.h
-    │       easy.h
-    │       mprintf.h
-    │       multi.h
-    │       options.h
-    │       stdcheaders.h
-    │       system.h
-    │       typecheck-gcc.h
-    │       urlapi.h
-    │       
-    ├───freetype
-    │   │   freetype.h
-    │   │   ftadvanc.h
-    │   │   ftbbox.h
-    │   │   ftbdf.h
-    │   │   ftbitmap.h
-    │   │   ftbzip2.h
-    │   │   ftcache.h
-    │   │   ftchapters.h
-    │   │   ftcid.h
-    │   │   ftcolor.h
-    │   │   ftdriver.h
-    │   │   fterrdef.h
-    │   │   fterrors.h
-    │   │   ftfntfmt.h
-    │   │   ftgasp.h
-    │   │   ftglyph.h
-    │   │   ftgxval.h
-    │   │   ftgzip.h
-    │   │   ftimage.h
-    │   │   ftincrem.h
-    │   │   ftlcdfil.h
-    │   │   ftlist.h
-    │   │   ftlzw.h
-    │   │   ftmac.h
-    │   │   ftmm.h
-    │   │   ftmodapi.h
-    │   │   ftmoderr.h
-    │   │   ftotval.h
-    │   │   ftoutln.h
-    │   │   ftparams.h
-    │   │   ftpfr.h
-    │   │   ftrender.h
-    │   │   ftsizes.h
-    │   │   ftsnames.h
-    │   │   ftstroke.h
-    │   │   ftsynth.h
-    │   │   ftsystem.h
-    │   │   fttrigon.h
-    │   │   fttypes.h
-    │   │   ftwinfnt.h
-    │   │   t1tables.h
-    │   │   ttnameid.h
-    │   │   tttables.h
-    │   │   tttags.h
-    │   │   
-    │   ├───config
-    │   │       ftconfig.h
-    │   │       ftheader.h
-    │   │       ftmodule.h
-    │   │       ftoption.h
-    │   │       ftstdlib.h
-    │   │       integer-types.h
-    │   │       mac-support.h
-    │   │       public-macros.h
-    │   │       
-    │   └───internal
-    │       │   autohint.h
-    │       │   cffotypes.h
-    │       │   cfftypes.h
-    │       │   compiler-macros.h
-    │       │   ftcalc.h
-    │       │   ftdebug.h
-    │       │   ftdrv.h
-    │       │   ftgloadr.h
-    │       │   fthash.h
-    │       │   ftmemory.h
-    │       │   ftobjs.h
-    │       │   ftpsprop.h
-    │       │   ftrfork.h
-    │       │   ftserv.h
-    │       │   ftstream.h
-    │       │   fttrace.h
-    │       │   ftvalid.h
-    │       │   psaux.h
-    │       │   pshints.h
-    │       │   sfnt.h
-    │       │   t1types.h
-    │       │   tttypes.h
-    │       │   wofftypes.h
-    │       │   
-    │       └───services
-    │               svbdf.h
-    │               svcfftl.h
-    │               svcid.h
-    │               svfntfmt.h
-    │               svgldict.h
-    │               svgxval.h
-    │               svkern.h
-    │               svmetric.h
-    │               svmm.h
-    │               svotval.h
-    │               svpfr.h
-    │               svpostnm.h
-    │               svprop.h
-    │               svpscmap.h
-    │               svpsinfo.h
-    │               svsfnt.h
-    │               svttcmap.h
-    │               svtteng.h
-    │               svttglyf.h
-    │               svwinfnt.h
-    │               
-    ├───libavcodec
-    │       ac3_parser.h
-    │       adts_parser.h
-    │       avcodec.h
-    │       avdct.h
-    │       avfft.h
-    │       bsf.h
-    │       codec.h
-    │       codec_desc.h
-    │       codec_id.h
-    │       codec_par.h
-    │       d3d11va.h
-    │       dirac.h
-    │       dv_profile.h
-    │       dxva2.h
-    │       jni.h
-    │       mediacodec.h
-    │       packet.h
-    │       qsv.h
-    │       vaapi.h
-    │       vdpau.h
-    │       version.h
-    │       videotoolbox.h
-    │       vorbis_parser.h
-    │       xvmc.h
-    │       
-    ├───libavdevice
-    │       avdevice.h
-    │       version.h
-    │       
-    ├───libavfilter
-    │       avfilter.h
-    │       buffersink.h
-    │       buffersrc.h
-    │       version.h
-    │       
-    ├───libavformat
-    │       avformat.h
-    │       avio.h
-    │       version.h
-    │       
-    ├───libavresample
-    │       avresample.h
-    │       version.h
-    │       
-    ├───libavutil
-    │       adler32.h
-    │       aes.h
-    │       aes_ctr.h
-    │       attributes.h
-    │       audio_fifo.h
-    │       avassert.h
-    │       avconfig.h
-    │       avstring.h
-    │       avutil.h
-    │       base64.h
-    │       blowfish.h
-    │       bprint.h
-    │       bswap.h
-    │       buffer.h
-    │       camellia.h
-    │       cast5.h
-    │       channel_layout.h
-    │       common.h
-    │       cpu.h
-    │       crc.h
-    │       des.h
-    │       dict.h
-    │       display.h
-    │       dovi_meta.h
-    │       downmix_info.h
-    │       encryption_info.h
-    │       error.h
-    │       eval.h
-    │       ffversion.h
-    │       fifo.h
-    │       file.h
-    │       film_grain_params.h
-    │       frame.h
-    │       hash.h
-    │       hdr_dynamic_metadata.h
-    │       hmac.h
-    │       hwcontext.h
-    │       hwcontext_cuda.h
-    │       hwcontext_d3d11va.h
-    │       hwcontext_drm.h
-    │       hwcontext_dxva2.h
-    │       hwcontext_mediacodec.h
-    │       hwcontext_opencl.h
-    │       hwcontext_qsv.h
-    │       hwcontext_vaapi.h
-    │       hwcontext_vdpau.h
-    │       hwcontext_videotoolbox.h
-    │       hwcontext_vulkan.h
-    │       imgutils.h
-    │       intfloat.h
-    │       intreadwrite.h
-    │       lfg.h
-    │       log.h
-    │       lzo.h
-    │       macros.h
-    │       mastering_display_metadata.h
-    │       mathematics.h
-    │       md5.h
-    │       mem.h
-    │       motion_vector.h
-    │       murmur3.h
-    │       opt.h
-    │       parseutils.h
-    │       pixdesc.h
-    │       pixelutils.h
-    │       pixfmt.h
-    │       random_seed.h
-    │       rational.h
-    │       rc4.h
-    │       replaygain.h
-    │       ripemd.h
-    │       samplefmt.h
-    │       sha.h
-    │       sha512.h
-    │       spherical.h
-    │       stereo3d.h
-    │       tea.h
-    │       threadmessage.h
-    │       time.h
-    │       timecode.h
-    │       timestamp.h
-    │       tree.h
-    │       twofish.h
-    │       tx.h
-    │       version.h
-    │       video_enc_params.h
-    │       xtea.h
-    │       
-    ├───libpng16
-    │       png.h
-    │       pngconf.h
-    │       pnglibconf.h
-    │       
-    ├───libswresample
-    │       swresample.h
-    │       version.h
-    │       
-    ├───libswscale
-    │       swscale.h
-    │       version.h
-    │       
-    ├───mbedtls
-    │       aes.h
-    │       aesni.h
-    │       arc4.h
-    │       aria.h
-    │       asn1.h
-    │       asn1write.h
-    │       base64.h
-    │       bignum.h
-    │       blowfish.h
-    │       bn_mul.h
-    │       camellia.h
-    │       ccm.h
-    │       certs.h
-    │       chacha20.h
-    │       chachapoly.h
-    │       check_config.h
-    │       cipher.h
-    │       cipher_internal.h
-    │       cmac.h
-    │       compat-1.3.h
-    │       config.h
-    │       config_psa.h
-    │       ctr_drbg.h
-    │       debug.h
-    │       des.h
-    │       dhm.h
-    │       ecdh.h
-    │       ecdsa.h
-    │       ecjpake.h
-    │       ecp.h
-    │       ecp_internal.h
-    │       entropy.h
-    │       entropy_poll.h
-    │       error.h
-    │       gcm.h
-    │       havege.h
-    │       hkdf.h
-    │       hmac_drbg.h
-    │       md.h
-    │       md2.h
-    │       md4.h
-    │       md5.h
-    │       md_internal.h
-    │       memory_buffer_alloc.h
-    │       net.h
-    │       net_sockets.h
-    │       nist_kw.h
-    │       oid.h
-    │       padlock.h
-    │       pem.h
-    │       pk.h
-    │       pkcs11.h
-    │       pkcs12.h
-    │       pkcs5.h
-    │       pk_internal.h
-    │       platform.h
-    │       platform_time.h
-    │       platform_util.h
-    │       poly1305.h
-    │       psa_util.h
-    │       ripemd160.h
-    │       rsa.h
-    │       rsa_internal.h
-    │       sha1.h
-    │       sha256.h
-    │       sha512.h
-    │       ssl.h
-    │       ssl_cache.h
-    │       ssl_ciphersuites.h
-    │       ssl_cookie.h
-    │       ssl_internal.h
-    │       ssl_ticket.h
-    │       threading.h
-    │       threading_alt.h
-    │       timing.h
-    │       version.h
-    │       x509.h
-    │       x509_crl.h
-    │       x509_crt.h
-    │       x509_csr.h
-    │       xtea.h
-    │       
-    ├───ogg
-    │       config_types.h.in
-    │       Makefile.am
-    │       ogg.h
-    │       os_types.h
-    │       
-    ├───opus
-    │       opus.h
-    │       opus_custom.h
-    │       opus_defines.h
-    │       opus_multistream.h
-    │       opus_projection.h
-    │       opus_types.h
-    │       
-    ├───psa
-    │       crypto.h
-    │       crypto_accel_driver.h
-    │       crypto_compat.h
-    │       crypto_config.h
-    │       crypto_driver_common.h
-    │       crypto_entropy_driver.h
-    │       crypto_extra.h
-    │       crypto_platform.h
-    │       crypto_se_driver.h
-    │       crypto_sizes.h
-    │       crypto_struct.h
-    │       crypto_types.h
-    │       crypto_values.h
-    │       
-    ├───srt
-    │   │   access_control.h
-    │   │   api.h
-    │   │   buffer.h
-    │   │   cache.h
-    │   │   channel.h
-    │   │   common.h
-    │   │   congctl.h
-    │   │   core.h
-    │   │   crypto.h
-    │   │   epoll.h
-    │   │   fec.h
-    │   │   group.h
-    │   │   handshake.h
-    │   │   list.h
-    │   │   logger_defs.h
-    │   │   logging.h
-    │   │   logging_api.h
-    │   │   md5.h
-    │   │   netinet_any.h
-    │   │   packet.h
-    │   │   packetfilter.h
-    │   │   packetfilter_api.h
-    │   │   packetfilter_builtin.h
-    │   │   platform_sys.h
-    │   │   queue.h
-    │   │   srt.h
-    │   │   srt_compat.h
-    │   │   sync.h
-    │   │   threadname.h
-    │   │   udt.h
-    │   │   utilities.h
-    │   │   window.h
-    │   │   
-    │   └───win
-    │           syslog_defs.h
-    │           unistd.h
-    │           wintime.h
-    │           
-    └───vorbis
-            codec.h
-            Makefile.am
-            vorbisenc.h
-            vorbisfile.h
-
+├───cef
+│   │   ...
+│               
+├───include
+│   │   detours.h
+│   │   ft2build.h
+│   │   x264.h
+│   │   x264_config.h
+│   │   zconf.h
+│   │   zlib.h
+│   │   
+│   ├───cmocka
+│   │       cmocka.h
+│   │       cmocka_pbc.h
+│   │       
+│   ├───curl
+│   │       curl.h
+│   │       curlver.h
+│   │       easy.h
+│   │       mprintf.h
+│   │       multi.h
+│   │       options.h
+│   │       stdcheaders.h
+│   │       system.h
+│   │       typecheck-gcc.h
+│   │       urlapi.h
+│   │       
+│   ├───freetype
+│   │   │   freetype.h
+│   │   │   ftadvanc.h
+│   │   │   ftbbox.h
+│   │   │   ftbdf.h
+│   │   │   ftbitmap.h
+│   │   │   ftbzip2.h
+│   │   │   ftcache.h
+│   │   │   ftchapters.h
+│   │   │   ftcid.h
+│   │   │   ftcolor.h
+│   │   │   ftdriver.h
+│   │   │   fterrdef.h
+│   │   │   fterrors.h
+│   │   │   ftfntfmt.h
+│   │   │   ftgasp.h
+│   │   │   ftglyph.h
+│   │   │   ftgxval.h
+│   │   │   ftgzip.h
+│   │   │   ftimage.h
+│   │   │   ftincrem.h
+│   │   │   ftlcdfil.h
+│   │   │   ftlist.h
+│   │   │   ftlzw.h
+│   │   │   ftmac.h
+│   │   │   ftmm.h
+│   │   │   ftmodapi.h
+│   │   │   ftmoderr.h
+│   │   │   ftotval.h
+│   │   │   ftoutln.h
+│   │   │   ftparams.h
+│   │   │   ftpfr.h
+│   │   │   ftrender.h
+│   │   │   ftsizes.h
+│   │   │   ftsnames.h
+│   │   │   ftstroke.h
+│   │   │   ftsynth.h
+│   │   │   ftsystem.h
+│   │   │   fttrigon.h
+│   │   │   fttypes.h
+│   │   │   ftwinfnt.h
+│   │   │   t1tables.h
+│   │   │   ttnameid.h
+│   │   │   tttables.h
+│   │   │   tttags.h
+│   │   │   
+│   │   ├───config
+│   │   │       ftconfig.h
+│   │   │       ftheader.h
+│   │   │       ftmodule.h
+│   │   │       ftoption.h
+│   │   │       ftstdlib.h
+│   │   │       integer-types.h
+│   │   │       mac-support.h
+│   │   │       public-macros.h
+│   │   │       
+│   │   └───internal
+│   │       │   autohint.h
+│   │       │   cffotypes.h
+│   │       │   cfftypes.h
+│   │       │   compiler-macros.h
+│   │       │   ftcalc.h
+│   │       │   ftdebug.h
+│   │       │   ftdrv.h
+│   │       │   ftgloadr.h
+│   │       │   fthash.h
+│   │       │   ftmemory.h
+│   │       │   ftobjs.h
+│   │       │   ftpsprop.h
+│   │       │   ftrfork.h
+│   │       │   ftserv.h
+│   │       │   ftstream.h
+│   │       │   fttrace.h
+│   │       │   ftvalid.h
+│   │       │   psaux.h
+│   │       │   pshints.h
+│   │       │   sfnt.h
+│   │       │   t1types.h
+│   │       │   tttypes.h
+│   │       │   wofftypes.h
+│   │       │   
+│   │       └───services
+│   │               svbdf.h
+│   │               svcfftl.h
+│   │               svcid.h
+│   │               svfntfmt.h
+│   │               svgldict.h
+│   │               svgxval.h
+│   │               svkern.h
+│   │               svmetric.h
+│   │               svmm.h
+│   │               svotval.h
+│   │               svpfr.h
+│   │               svpostnm.h
+│   │               svprop.h
+│   │               svpscmap.h
+│   │               svpsinfo.h
+│   │               svsfnt.h
+│   │               svttcmap.h
+│   │               svtteng.h
+│   │               svttglyf.h
+│   │               svwinfnt.h
+│   │               
+│   ├───libavcodec
+│   │       ac3_parser.h
+│   │       adts_parser.h
+│   │       avcodec.h
+│   │       avdct.h
+│   │       avfft.h
+│   │       bsf.h
+│   │       codec.h
+│   │       codec_desc.h
+│   │       codec_id.h
+│   │       codec_par.h
+│   │       d3d11va.h
+│   │       dirac.h
+│   │       dv_profile.h
+│   │       dxva2.h
+│   │       jni.h
+│   │       mediacodec.h
+│   │       packet.h
+│   │       qsv.h
+│   │       vaapi.h
+│   │       vdpau.h
+│   │       version.h
+│   │       videotoolbox.h
+│   │       vorbis_parser.h
+│   │       xvmc.h
+│   │       
+│   ├───libavdevice
+│   │       avdevice.h
+│   │       version.h
+│   │       
+│   ├───libavfilter
+│   │       avfilter.h
+│   │       buffersink.h
+│   │       buffersrc.h
+│   │       version.h
+│   │       
+│   ├───libavformat
+│   │       avformat.h
+│   │       avio.h
+│   │       version.h
+│   │       
+│   ├───libavresample
+│   │       avresample.h
+│   │       version.h
+│   │       
+│   ├───libavutil
+│   │       adler32.h
+│   │       aes.h
+│   │       aes_ctr.h
+│   │       attributes.h
+│   │       audio_fifo.h
+│   │       avassert.h
+│   │       avconfig.h
+│   │       avstring.h
+│   │       avutil.h
+│   │       base64.h
+│   │       blowfish.h
+│   │       bprint.h
+│   │       bswap.h
+│   │       buffer.h
+│   │       camellia.h
+│   │       cast5.h
+│   │       channel_layout.h
+│   │       common.h
+│   │       cpu.h
+│   │       crc.h
+│   │       des.h
+│   │       dict.h
+│   │       display.h
+│   │       dovi_meta.h
+│   │       downmix_info.h
+│   │       encryption_info.h
+│   │       error.h
+│   │       eval.h
+│   │       ffversion.h
+│   │       fifo.h
+│   │       file.h
+│   │       film_grain_params.h
+│   │       frame.h
+│   │       hash.h
+│   │       hdr_dynamic_metadata.h
+│   │       hmac.h
+│   │       hwcontext.h
+│   │       hwcontext_cuda.h
+│   │       hwcontext_d3d11va.h
+│   │       hwcontext_drm.h
+│   │       hwcontext_dxva2.h
+│   │       hwcontext_mediacodec.h
+│   │       hwcontext_opencl.h
+│   │       hwcontext_qsv.h
+│   │       hwcontext_vaapi.h
+│   │       hwcontext_vdpau.h
+│   │       hwcontext_videotoolbox.h
+│   │       hwcontext_vulkan.h
+│   │       imgutils.h
+│   │       intfloat.h
+│   │       intreadwrite.h
+│   │       lfg.h
+│   │       log.h
+│   │       lzo.h
+│   │       macros.h
+│   │       mastering_display_metadata.h
+│   │       mathematics.h
+│   │       md5.h
+│   │       mem.h
+│   │       motion_vector.h
+│   │       murmur3.h
+│   │       opt.h
+│   │       parseutils.h
+│   │       pixdesc.h
+│   │       pixelutils.h
+│   │       pixfmt.h
+│   │       random_seed.h
+│   │       rational.h
+│   │       rc4.h
+│   │       replaygain.h
+│   │       ripemd.h
+│   │       samplefmt.h
+│   │       sha.h
+│   │       sha512.h
+│   │       spherical.h
+│   │       stereo3d.h
+│   │       tea.h
+│   │       threadmessage.h
+│   │       time.h
+│   │       timecode.h
+│   │       timestamp.h
+│   │       tree.h
+│   │       twofish.h
+│   │       tx.h
+│   │       version.h
+│   │       video_enc_params.h
+│   │       xtea.h
+│   │       
+│   ├───libpng16
+│   │       png.h
+│   │       pngconf.h
+│   │       pnglibconf.h
+│   │       
+│   ├───libswresample
+│   │       swresample.h
+│   │       version.h
+│   │       
+│   ├───libswscale
+│   │       swscale.h
+│   │       version.h
+│   │       
+│   ├───mbedtls
+│   │       aes.h
+│   │       aesni.h
+│   │       arc4.h
+│   │       aria.h
+│   │       asn1.h
+│   │       asn1write.h
+│   │       base64.h
+│   │       bignum.h
+│   │       blowfish.h
+│   │       bn_mul.h
+│   │       camellia.h
+│   │       ccm.h
+│   │       certs.h
+│   │       chacha20.h
+│   │       chachapoly.h
+│   │       check_config.h
+│   │       cipher.h
+│   │       cipher_internal.h
+│   │       cmac.h
+│   │       compat-1.3.h
+│   │       config.h
+│   │       config_psa.h
+│   │       ctr_drbg.h
+│   │       debug.h
+│   │       des.h
+│   │       dhm.h
+│   │       ecdh.h
+│   │       ecdsa.h
+│   │       ecjpake.h
+│   │       ecp.h
+│   │       ecp_internal.h
+│   │       entropy.h
+│   │       entropy_poll.h
+│   │       error.h
+│   │       gcm.h
+│   │       havege.h
+│   │       hkdf.h
+│   │       hmac_drbg.h
+│   │       md.h
+│   │       md2.h
+│   │       md4.h
+│   │       md5.h
+│   │       md_internal.h
+│   │       memory_buffer_alloc.h
+│   │       net.h
+│   │       net_sockets.h
+│   │       nist_kw.h
+│   │       oid.h
+│   │       padlock.h
+│   │       pem.h
+│   │       pk.h
+│   │       pkcs11.h
+│   │       pkcs12.h
+│   │       pkcs5.h
+│   │       pk_internal.h
+│   │       platform.h
+│   │       platform_time.h
+│   │       platform_util.h
+│   │       poly1305.h
+│   │       psa_util.h
+│   │       ripemd160.h
+│   │       rsa.h
+│   │       rsa_internal.h
+│   │       sha1.h
+│   │       sha256.h
+│   │       sha512.h
+│   │       ssl.h
+│   │       ssl_cache.h
+│   │       ssl_ciphersuites.h
+│   │       ssl_cookie.h
+│   │       ssl_internal.h
+│   │       ssl_ticket.h
+│   │       threading.h
+│   │       threading_alt.h
+│   │       timing.h
+│   │       version.h
+│   │       x509.h
+│   │       x509_crl.h
+│   │       x509_crt.h
+│   │       x509_csr.h
+│   │       xtea.h
+│   │       
+│   ├───ogg
+│   │       config_types.h.in
+│   │       Makefile.am
+│   │       ogg.h
+│   │       os_types.h
+│   │       
+│   ├───opus
+│   │       opus.h
+│   │       opus_custom.h
+│   │       opus_defines.h
+│   │       opus_multistream.h
+│   │       opus_projection.h
+│   │       opus_types.h
+│   │       
+│   ├───psa
+│   │       crypto.h
+│   │       crypto_accel_driver.h
+│   │       crypto_compat.h
+│   │       crypto_config.h
+│   │       crypto_driver_common.h
+│   │       crypto_entropy_driver.h
+│   │       crypto_extra.h
+│   │       crypto_platform.h
+│   │       crypto_se_driver.h
+│   │       crypto_sizes.h
+│   │       crypto_struct.h
+│   │       crypto_types.h
+│   │       crypto_values.h
+│   │       
+│   ├───python
+│   │   │   abstract.h
+│   │   │   asdl.h
+│   │   │   ast.h
+│   │   │   bitset.h
+│   │   │   bltinmodule.h
+│   │   │   boolobject.h
+│   │   │   bytearrayobject.h
+│   │   │   bytesobject.h
+│   │   │   cellobject.h
+│   │   │   ceval.h
+│   │   │   classobject.h
+│   │   │   code.h
+│   │   │   codecs.h
+│   │   │   compile.h
+│   │   │   complexobject.h
+│   │   │   context.h
+│   │   │   datetime.h
+│   │   │   descrobject.h
+│   │   │   dictobject.h
+│   │   │   dynamic_annotations.h
+│   │   │   enumobject.h
+│   │   │   errcode.h
+│   │   │   eval.h
+│   │   │   exports.h
+│   │   │   fileobject.h
+│   │   │   fileutils.h
+│   │   │   floatobject.h
+│   │   │   frameobject.h
+│   │   │   funcobject.h
+│   │   │   genericaliasobject.h
+│   │   │   genobject.h
+│   │   │   graminit.h
+│   │   │   grammar.h
+│   │   │   import.h
+│   │   │   interpreteridobject.h
+│   │   │   intrcheck.h
+│   │   │   iterobject.h
+│   │   │   listobject.h
+│   │   │   longintrepr.h
+│   │   │   longobject.h
+│   │   │   marshal.h
+│   │   │   memoryobject.h
+│   │   │   methodobject.h
+│   │   │   modsupport.h
+│   │   │   moduleobject.h
+│   │   │   namespaceobject.h
+│   │   │   node.h
+│   │   │   object.h
+│   │   │   objimpl.h
+│   │   │   odictobject.h
+│   │   │   opcode.h
+│   │   │   osdefs.h
+│   │   │   osmodule.h
+│   │   │   parsetok.h
+│   │   │   patchlevel.h
+│   │   │   picklebufobject.h
+│   │   │   pyarena.h
+│   │   │   pycapsule.h
+│   │   │   pyctype.h
+│   │   │   pydebug.h
+│   │   │   pydtrace.d
+│   │   │   pydtrace.h
+│   │   │   pyerrors.h
+│   │   │   pyexpat.h
+│   │   │   pyfpe.h
+│   │   │   pyframe.h
+│   │   │   pyhash.h
+│   │   │   pylifecycle.h
+│   │   │   pymacconfig.h
+│   │   │   pymacro.h
+│   │   │   pymath.h
+│   │   │   pymem.h
+│   │   │   pyport.h
+│   │   │   pystate.h
+│   │   │   pystrcmp.h
+│   │   │   pystrhex.h
+│   │   │   pystrtod.h
+│   │   │   Python-ast.h
+│   │   │   Python.h
+│   │   │   pythonrun.h
+│   │   │   pythread.h
+│   │   │   pytime.h
+│   │   │   py_curses.h
+│   │   │   rangeobject.h
+│   │   │   setobject.h
+│   │   │   sliceobject.h
+│   │   │   structmember.h
+│   │   │   structseq.h
+│   │   │   symtable.h
+│   │   │   sysmodule.h
+│   │   │   token.h
+│   │   │   traceback.h
+│   │   │   tracemalloc.h
+│   │   │   tupleobject.h
+│   │   │   typeslots.h
+│   │   │   ucnhash.h
+│   │   │   unicodeobject.h
+│   │   │   warnings.h
+│   │   │   weakrefobject.h
+│   │   │   
+│   │   ├───cpython
+│   │   │       abstract.h
+│   │   │       bytearrayobject.h
+│   │   │       bytesobject.h
+│   │   │       ceval.h
+│   │   │       code.h
+│   │   │       dictobject.h
+│   │   │       fileobject.h
+│   │   │       fileutils.h
+│   │   │       frameobject.h
+│   │   │       import.h
+│   │   │       initconfig.h
+│   │   │       interpreteridobject.h
+│   │   │       listobject.h
+│   │   │       methodobject.h
+│   │   │       object.h
+│   │   │       objimpl.h
+│   │   │       pyerrors.h
+│   │   │       pylifecycle.h
+│   │   │       pymem.h
+│   │   │       pystate.h
+│   │   │       sysmodule.h
+│   │   │       traceback.h
+│   │   │       tupleobject.h
+│   │   │       unicodeobject.h
+│   │   │       
+│   │   └───internal
+│   │           pegen_interface.h
+│   │           pycore_abstract.h
+│   │           pycore_accu.h
+│   │           pycore_atomic.h
+│   │           pycore_byteswap.h
+│   │           pycore_bytes_methods.h
+│   │           pycore_call.h
+│   │           pycore_ceval.h
+│   │           pycore_code.h
+│   │           pycore_condvar.h
+│   │           pycore_context.h
+│   │           pycore_dtoa.h
+│   │           pycore_fileutils.h
+│   │           pycore_gc.h
+│   │           pycore_getopt.h
+│   │           pycore_gil.h
+│   │           pycore_hamt.h
+│   │           pycore_hashtable.h
+│   │           pycore_import.h
+│   │           pycore_initconfig.h
+│   │           pycore_interp.h
+│   │           pycore_object.h
+│   │           pycore_pathconfig.h
+│   │           pycore_pyerrors.h
+│   │           pycore_pyhash.h
+│   │           pycore_pylifecycle.h
+│   │           pycore_pymem.h
+│   │           pycore_pystate.h
+│   │           pycore_runtime.h
+│   │           pycore_sysmodule.h
+│   │           pycore_traceback.h
+│   │           pycore_tupleobject.h
+│   │           pycore_warnings.h
+│   │           
+│   ├───srt
+│   │   │   access_control.h
+│   │   │   api.h
+│   │   │   buffer.h
+│   │   │   cache.h
+│   │   │   channel.h
+│   │   │   common.h
+│   │   │   congctl.h
+│   │   │   core.h
+│   │   │   crypto.h
+│   │   │   epoll.h
+│   │   │   fec.h
+│   │   │   group.h
+│   │   │   handshake.h
+│   │   │   list.h
+│   │   │   logger_defs.h
+│   │   │   logging.h
+│   │   │   logging_api.h
+│   │   │   md5.h
+│   │   │   netinet_any.h
+│   │   │   packet.h
+│   │   │   packetfilter.h
+│   │   │   packetfilter_api.h
+│   │   │   packetfilter_builtin.h
+│   │   │   platform_sys.h
+│   │   │   queue.h
+│   │   │   srt.h
+│   │   │   srt_compat.h
+│   │   │   sync.h
+│   │   │   threadname.h
+│   │   │   udt.h
+│   │   │   utilities.h
+│   │   │   window.h
+│   │   │   
+│   │   └───win
+│   │           syslog_defs.h
+│   │           unistd.h
+│   │           wintime.h
+│   │           
+│   └───vorbis
+│           codec.h
+│           Makefile.am
+│           vorbisenc.h
+│           vorbisfile.h
+│           
+├───qt
+│   |   ...
+│               
+├───swig
+    │   swig.exe
+    |   ...
 ```
 </details>
-
-## Prepare CEF
-
-Download CEF at https://cef-builds.spotifycdn.com/index.html#windowsarm64
-
-unzip, create a folder `build` inside.
-Run CMake and point the build directory to the `build` folder created last step, build the wrapper.
-
 
 # Compile OBS
 ## Generate `.sln`
@@ -745,8 +934,11 @@ Use CMake.
 |---:|:---|
 |`BUILD_AMD_DECODER`|`OFF`|
 |`COMPILE_D3D12_HOOK`|`ON`|
+|`PYTHON_LIB`|`DepsARM64/bin/python39.lib`|
 
 Also make sure `QTDIR`, `DepsPath` and `CEF_ROOT_DIR` are set.
+
+Note that CPython have support for Windows ARM64 only since version 3.9, while the Intel version of OBS Studio is still using version 3.6.
 
 
 ## Prepare for compile  
@@ -755,7 +947,9 @@ Also make sure `QTDIR`, `DepsPath` and `CEF_ROOT_DIR` are set.
 	- `deps/glad`
 	- `plugins/obs-qsv11`
 2. Fix `WinSock2.h` problem
-	Right-click on `plugins/obs-outputs` project, in Configuration Properties > C/C++ > Preprocessor, add `WIN32_LEAN_AND_MEAN` in Preprocessor Defenitions.
+	Right-click on `plugins/obs-outputs` project, then select Properties. In Configuration Properties > C/C++ > Preprocessor, add `WIN32_LEAN_AND_MEAN` in Preprocessor Defenitions.
+3. Fix `std::min()` and `std::max()` redefinition
+    Select `frontend/decklink-ouput-ui`, `frontend/frontend-tools` and `frontend/obs`and right-click, then select Properties. In Configuration Properties > C/C++ > Preprocessor, add `NOMINMAX` in Preprocessor Defenitions.
 
 ## Compile
 Select `Release` configuration, and build. 
